@@ -1,7 +1,6 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id ("com.google.devtools.ksp")
 }
 
 android {
@@ -10,10 +9,10 @@ android {
 
     defaultConfig {
         applicationId = "io.github.s_ymb.simplenumbergame"
-        minSdk = 30
+        minSdk = 29
         targetSdk = 33
-        versionCode = 13
-        versionName = "0.1.3"
+        versionCode = 1
+        versionName = "0.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -73,19 +72,6 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-
-    //Room
-    implementation("androidx.room:room-runtime:${rootProject.extra["room_version"]}")
-    implementation("androidx.core:core-ktx:1.12.0")
-//    implementation("androidx.core:core-ktx:1.10.1")
-    implementation("androidx.room:room-ktx:${rootProject.extra["room_version"]}")
-    ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
-
-//    implementation("androidx.room:room-runtime:room_version")
-//    implementation("androidx.core:core-ktx:1.10.1")
-//    ksp("androidx.room:room-compiler:room_version")
-//    implementation("androidx.room:room-ktx:room_version")
-
 
     // スプラッシュ二重起動対策
     implementation("androidx.core:core-splashscreen:1.0.1")

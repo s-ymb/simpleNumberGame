@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Numbergame</string>
+    <string name="app_name">SimpleNumbergame</string>
     <string name="back_button">Back</string>
 
     <string name="create_user_name">作成者：</string>

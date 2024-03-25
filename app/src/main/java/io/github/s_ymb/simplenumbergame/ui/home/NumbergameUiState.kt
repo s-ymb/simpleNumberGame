@@ -12,14 +12,16 @@ data class NumbergameUiState(
                             }
                         },
     val currentBtn: Array<ScreenBtnData> = Array(NumbergameData.KIND_OF_DATA + 1){ScreenBtnData(0)},
-    val currentDataOrgName: String = "",            // データの元（シャッフル前の名前）
-    val currentDataOrgCreateDt: String = "",        // データの元（シャッフル前の作成日）
-    val haveSearchResult: Boolean = false,
-    val currentSearchResult: Array<Int> = Array(NumbergameData.KIND_OF_DATA + 1) { NumbergameData.IMPOSSIBLE_NUM },
     val isGameOver: Boolean = false,
-    val sameSatisfiedCnt: Int = -1,                 // 登録済みの正解件数（-1：未検索）
     val blankCellCnt: Int = 0,
 ) {
+
+    override fun hashCode(): Int {
+        var result = currentData.contentDeepHashCode()
+        result = 31 * result + currentBtn.contentHashCode()
+        return result
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -27,14 +29,6 @@ data class NumbergameUiState(
         other as NumbergameUiState
 
         if (!currentData.contentDeepEquals(other.currentData)) return false
-        if (!currentBtn.contentEquals(other.currentBtn)) return false
-        return currentSearchResult.contentEquals(other.currentSearchResult)
-    }
-
-    override fun hashCode(): Int {
-        var result = currentData.contentDeepHashCode()
-        result = 31 * result + currentBtn.contentHashCode()
-        result = 31 * result + currentSearchResult.contentHashCode()
-        return result
+        return currentBtn.contentEquals(other.currentBtn)
     }
 }
