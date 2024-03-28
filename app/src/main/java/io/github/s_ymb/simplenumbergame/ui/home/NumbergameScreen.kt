@@ -44,7 +44,6 @@ import io.github.s_ymb.simplenumbergame.data.ScreenCellData
 /**
  * 　数独のメイン画面
  */
-//@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun GameScreen(
@@ -56,7 +55,6 @@ fun GameScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         // グリッド表示
-        // 通常時は設定された数字を９×９のテキストボックスで表示する
         NumberGridLayout(
             onCellClicked = { rowId, colId -> gameViewModel.onCellClicked(rowId, colId) },
             currentData = gameUiState.currentData
@@ -360,6 +358,5 @@ private fun FinalDialog(
             }
         }
     )
-
 }
 

@@ -4,9 +4,9 @@ import io.github.s_ymb.simplenumbergame.data.DupErr
 import io.github.s_ymb.simplenumbergame.data.GridData
 import io.github.s_ymb.simplenumbergame.data.NumbergameData
 import io.github.s_ymb.simplenumbergame.data.NumbergameData.Companion.IMPOSSIBLE_IDX
-import io.github.s_ymb.simplenumbergame.data.NumbergameData.Companion.IMPOSSIBLE_NUM
+import io.github.s_ymb.simplenumbergame.data.NumbergameData.Companion.NUM_NOT_SET
+import io.github.s_ymb.simplenumbergame.data.SatisfiedGridArrayInit
 import io.github.s_ymb.simplenumbergame.data.SatisfiedGridData
-import io.github.s_ymb.simplenumbergame.data.SatisfiedGridList
 import io.github.s_ymb.simplenumbergame.data.ScreenBtnData
 import io.github.s_ymb.simplenumbergame.data.ScreenCellData
 import io.github.s_ymb.simplenumbergame.ui.ToastUiState
@@ -26,8 +26,8 @@ class NumbergameViewModel : ViewModel() {
     val toastUiState = _toastUiState.asStateFlow()
 
     private val gridData = GridData()
-    private var satisfiedGridData = SatisfiedGridData()                 //表示中の正解リスト
-    private val satisfiedGridList = SatisfiedGridList()         //正解リスト
+//    private var satisfiedGridData = SatisfiedGridData()                 //表示中の正解リスト
+//    private val satisfiedGridList = SatisfiedGridList()         //正解リスト
 
     // TODO 固定セルの初期値と設定できる範囲の検討が必要
     private var blankCellCnt = 30                                   //空白のセルの個数
@@ -53,7 +53,7 @@ class NumbergameViewModel : ViewModel() {
                                                         Array(NumbergameData.NUM_OF_COL)
                                                         {
                                                             ScreenCellData(
-                                                                num = NumbergameData.NUM_NOT_SET,
+                                                                num = NUM_NOT_SET,
                                                                 init = false,
                                                                 isSelected = false,
                                                                 isSameNum = false
@@ -65,8 +65,8 @@ class NumbergameViewModel : ViewModel() {
 
         // ９×９の数字の配列をui state に設定する
         // 選択中のセルと同じ数字の表示を変える為に選択中のセルの数字を保存
-        var selectedNum = IMPOSSIBLE_NUM                //選択されたセルが無い場合はなし
-        if(selectedRow != IMPOSSIBLE_NUM && selectedCol != IMPOSSIBLE_NUM){
+        var selectedNum = NUM_NOT_SET                //初期値は未設定の数字(0)
+        if(selectedRow != IMPOSSIBLE_IDX && selectedCol != IMPOSSIBLE_IDX){
             // 選択中のセルと同じ数字の表示を変える為に選択中のセルの数字を保存
             selectedNum = gridData.data[selectedRow][selectedCol].num
         }
@@ -87,7 +87,7 @@ class NumbergameViewModel : ViewModel() {
 
                 // 選択中のセルと同じ数字の場合（空白以外）、UIで強調表示するためフラグを設定
                 tmpData[rowIdx][colIdx].isSameNum = false
-                if(selectedNum != NumbergameData.NUM_NOT_SET) {
+                if(selectedNum != NUM_NOT_SET) {
                     if (selectedNum == gridData.data[rowIdx][colIdx].num) {
                         // 選択中のセルと同じ番号のセルは強調表示する為にフラグを設定
                         tmpData[rowIdx][colIdx].isSameNum = true
@@ -99,7 +99,7 @@ class NumbergameViewModel : ViewModel() {
         var isGameOver = true
         gridData.data.forEach {
             it.forEach{cell ->
-                isGameOver = isGameOver && (cell.num != NumbergameData.NUM_NOT_SET)
+                isGameOver = isGameOver && (cell.num != NUM_NOT_SET)
             }
         }
 
@@ -130,12 +130,13 @@ class NumbergameViewModel : ViewModel() {
      */
     fun newGame(){
         //正解リストより初期値を設定する
-        // 正解配列をランダムに取得する(satisfiedGridArrayInit + SatisfiedGridTble 読み込み分)
-        val satisfiedIdx: Int=  (0 until satisfiedGridList.getSize()).random()
-        satisfiedGridData = satisfiedGridList.getSatisfied(satisfiedIdx)
+        // 初期課題をランダムに選択
+        val satisfiedIdx: Int= (0 until SatisfiedGridArrayInit.data.size).random()
 
         // 正解配列をランダムに並べ変える、９×９のセルに初期値設定する
+        val satisfiedGridData = SatisfiedGridData(SatisfiedGridArrayInit.data[satisfiedIdx])
         gridData.newGame(satisfiedGridData.getRandom(), blankCellCnt)
+
         //選択中セルの初期化
         selectedCol = IMPOSSIBLE_IDX
         selectedRow = IMPOSSIBLE_IDX
@@ -161,7 +162,7 @@ class NumbergameViewModel : ViewModel() {
     fun onNumberBtnClicked(number: Int){
         var ret = DupErr.NOT_SELECTED       //とりあえず未選択状態
         if((selectedRow != IMPOSSIBLE_IDX) && (selectedCol != IMPOSSIBLE_IDX)) {
-            // 画面で数字を入力する場所が選択されていた場合、データを
+            // 画面で数字を入力する場所が選択されていた場合、データを設定
             ret = gridData.setData(selectedRow, selectedCol, number, false)
        }
         // TODO トーストのメッセージは仮置き(view Model なので strings.xml からの取得方法要検討

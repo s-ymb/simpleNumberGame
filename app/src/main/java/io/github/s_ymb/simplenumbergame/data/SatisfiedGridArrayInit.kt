@@ -1,6 +1,6 @@
 package io.github.s_ymb.simplenumbergame.data
 
-public class SatisfiedGridArrayInit {
+class SatisfiedGridArrayInit {
     companion object{
         val data = arrayOf(
             arrayOf(

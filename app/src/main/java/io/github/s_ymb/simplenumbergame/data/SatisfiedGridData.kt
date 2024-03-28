@@ -1,7 +1,11 @@
 package io.github.s_ymb.simplenumbergame.data
 
-class SatisfiedGridData(satisfied: SatisfiedGrid = SatisfiedGrid()) : NumbergameData(){
-    public val satisfiedGrid = satisfied
+class SatisfiedGridData (satisfiedArray: Array<IntArray> = Array(NUM_OF_ROW){
+                                    IntArray(NUM_OF_COL){
+                                                                            NUM_NOT_SET
+                                                                        }
+                                                            }): NumbergameData(){
+    private val satisfied = satisfiedArray
     /*
     正解データを正解リストからランダムに選択し、セルの位置の再配置を指定する
 */
@@ -24,14 +28,14 @@ class SatisfiedGridData(satisfied: SatisfiedGrid = SatisfiedGrid()) : Numbergame
         PATTERN_23         // ２行（列）と３行（列）を入替
     }
 
-    enum class RotateArea{
+    enum class RotateArea {
         START,      // 行入替の場合、最上段のエリア、列入替の場合、左端のエリア
         MIDDLE,     // 真ん中のエリア
         END         // 行入替の場合、最下段のエリア、列入替の場合、右端のエリア
     }
 
     fun getRandom() : Array<IntArray>  {
-        // 正解リストのリストより１つの正解を選択
+        // 正解リストの１つの正解を選択
         // NumbergemeViewModelに移動
 //        val satisfiedIdx: Int=  (0 until dataList.size).random()
 //        val satisfiedGrid = dataList[satisfiedIdx]
@@ -58,11 +62,11 @@ class SatisfiedGridData(satisfied: SatisfiedGrid = SatisfiedGrid()) : Numbergame
                 if (rotateDirection == RotateDirection.ROW.ordinal) {
                     // 行入替パターンの場合、設定元の行番号をオフセット分ずらした値を設定する
                     retArray[rowIdx][colIdx] =
-                        seedArray[satisfiedGrid.data[rowIdx + offset[rowIdx][colIdx]][colIdx] - 1]        // 配列は０オリジンなので１ずらす
+                        seedArray[satisfied[rowIdx + offset[rowIdx][colIdx]][colIdx] - 1]        // 配列は０オリジンなので１ずらす
                 } else {
                     // 列入替パターンの場合、設定元の列番号をオフセット分ずらした値を設定する
                     retArray[rowIdx][colIdx] =
-                        seedArray[satisfiedGrid.data[rowIdx][colIdx + offset[rowIdx][colIdx]] - 1]        // 配列は０オリジンなので１ずらす
+                        seedArray[satisfied[rowIdx][colIdx + offset[rowIdx][colIdx]] - 1]        // 配列は０オリジンなので１ずらす
                 }
             }
         }
@@ -71,9 +75,19 @@ class SatisfiedGridData(satisfied: SatisfiedGrid = SatisfiedGrid()) : Numbergame
 
     /*
             行・列 入替のパターン毎に移動させる距離をオフセット配列に設定していく
+            例.1                            例２.
+                １行目と２行目を入れ替えたい場合        中央のブロックと右側のブロックを入れ替えたい場合
+                 1  1  1  1  1  1  1  1  1          0  0  0  3  3  3 -3 -3 -3
+                -1 -1 -1 -1 -1 -1 -1 -1 -1          0  0  0  3  3  3 -3 -3 -3
+                 0  0  0  0  0  0  0  0  0          0  0  0  3  3  3 -3 -3 -3
+                 0  0  0  0  0  0  0  0  0          0  0  0  3  3  3 -3 -3 -3
+                 0  0  0  0  0  0  0  0  0          0  0  0  3  3  3 -3 -3 -3
+                 0  0  0  0  0  0  0  0  0          0  0  0  3  3  3 -3 -3 -3
+                 0  0  0  0  0  0  0  0  0          0  0  0  3  3  3 -3 -3 -3
+                 0  0  0  0  0  0  0  0  0          0  0  0  3  3  3 -3 -3 -3
+                 0  0  0  0  0  0  0  0  0          0  0  0  3  3  3 -3 -3 -3
+
      */
-
-
     private fun getOffset(type: Int, direction: Int, pattern: Int,area: Int): Array<IntArray> {
         val retOffset =
             Array(NUM_OF_ROW) { IntArray(NUM_OF_COL) { NUM_NOT_SET } }
@@ -103,130 +117,60 @@ class SatisfiedGridData(satisfied: SatisfiedGrid = SatisfiedGrid()) : Numbergame
                 }
             }
         } else if (type == RotateType.AREA_ROTATE.ordinal) {
+            var swapFrom = 0
+            var swapTo = 0
             // エリア入替の場合(マスクパターン毎に、ここでセット）
+            when (pattern) {
+                RotatePattern.PATTERN_12.ordinal
+                -> {
+                    // 最初エリアと途中エリアを入れ替える
+                    swapFrom = RotateArea.START.ordinal
+                    swapTo = RotateArea.MIDDLE.ordinal
+                }
+
+                RotatePattern.PATTERN_13.ordinal
+                -> {
+                    // 最初エリアと最終エリアを入れ替える
+                    swapFrom = RotateArea.START.ordinal
+                    swapTo = RotateArea.END.ordinal
+                }
+
+                RotatePattern.PATTERN_23.ordinal
+                -> {
+                    // 途中のエリアと最終のエリアを入れ替える
+                    swapFrom = RotateArea.MIDDLE.ordinal
+                    swapTo = RotateArea.END.ordinal
+                }
+            }
+            // 入替元の先頭位置と移動距離を設定
+            val startIndexFrom = SQR_SIZE * swapFrom
+            val startIndexTo = SQR_SIZE * swapTo
+            val distance = SQR_SIZE * (swapTo - swapFrom)
+
             if (direction == RotateDirection.ROW.ordinal) {
                 // エリアの行入替の場合
-                when (pattern) {
-                    RotatePattern.PATTERN_12.ordinal
-                    -> {
-                        // 上段のエリアと中段のエリアを入れ替える
-                        // 上段エリアに３段下のエリアへの移動を設定
-                        for (maskIdx in 0 until SQR_SIZE) {
-                            for (colIdx in 0 until NUM_OF_COL) {
-                                retOffset[maskIdx][colIdx] = 3
-                            }
-                        }
-                        // ２段目のスタート行
-                        val startRowIdx = SQR_SIZE
-                        //中段エリアに３段上のエリアへの移動を設定
-                        for (maskIdx in startRowIdx until startRowIdx + SQR_SIZE) {
-                            for (colIdx in 0 until NUM_OF_COL) {
-                                retOffset[maskIdx][colIdx] = -3
-                            }
-                        }
+                //入替元に設定するマスク
+                for (rowIdx in  startIndexFrom  until  startIndexFrom + SQR_SIZE) {
+                    for (colIdx in 0 until NUM_OF_COL) {
+                        retOffset[rowIdx][colIdx] = distance
                     }
-                    RotatePattern.PATTERN_13.ordinal
-                    -> {
-                        // 上段のエリアと下段のエリアを入れ替える
-                        // 上段エリアに６段下のエリアへの移動を設定
-                        for (maskIdx in 0 until SQR_SIZE) {
-                            for (colIdx in 0 until NUM_OF_COL) {
-                                retOffset[maskIdx][colIdx] = 6
-                            }
-                        }
-                        // 下段エリアに６段上のエリアへの移動を設定
-                        // ３段目のスタート行
-                        val startRowIdx = SQR_SIZE + SQR_SIZE
-                        for (maskIdx in startRowIdx until startRowIdx + SQR_SIZE) {
-                            for (colIdx in 0 until NUM_OF_COL) {
-                                retOffset[maskIdx][colIdx] = -6
-                            }
-                        }
-                    }
-
-                    RotatePattern.PATTERN_23.ordinal
-                    -> {
-                        // 上段のエリアと中段のエリアを入れ替える
-                        // 上段エリアに３段下のエリアへの移動を設定
-                        // ２段目のスタート行
-                        val start2RowIdx = SQR_SIZE
-                        for (maskIdx in  start2RowIdx  until  start2RowIdx + SQR_SIZE) {
-                            for (colIdx in 0 until NUM_OF_COL) {
-                                retOffset[maskIdx][colIdx] = 3
-                            }
-                        }
-                        // ３段目のスタート行
-                        val start3RowIdx = SQR_SIZE + SQR_SIZE
-                        //中段エリアに３段上のエリアへの移動を設定
-                        for (maskIdx in start3RowIdx until start3RowIdx + SQR_SIZE) {
-                            for (colIdx in 0 until NUM_OF_COL) {
-                                retOffset[maskIdx][colIdx] = -3
-                            }
-                        }
-
+                }
+                // 入替先に設定するマスク
+                for (rowIdx in startIndexTo until startIndexTo + SQR_SIZE) {
+                    for (colIdx in 0 until NUM_OF_COL) {
+                        retOffset[rowIdx][colIdx] = -distance
                     }
                 }
             } else if (direction == RotateDirection.COL.ordinal) {
-                // エリアの列入替の場合
-                when (pattern) {
-                    RotatePattern.PATTERN_12.ordinal
-                    -> {
-                        // 左側のエリアと中側のエリアを入れ替える
-                        // 左側エリアに３段右のエリアへの移動を設定
-                        for (maskIdx in 0 until SQR_SIZE) {
-                            for (rowIdx in 0 until NUM_OF_ROW) {
-                                retOffset[rowIdx][maskIdx] = 3
-                            }
-                        }
-                        // 中側エリアのスタート列
-                        val startColIdx = SQR_SIZE
-                        //中段エリアに左側のエリアへの移動を設定
-                        for (maskIdx in startColIdx until startColIdx + SQR_SIZE) {
-                            for (rowIdx in 0 until NUM_OF_ROW) {
-                                retOffset[rowIdx][maskIdx] = -3
-                            }
-                        }
+            // エリアの列入替の場合
+                for (colIdx in startIndexFrom until startIndexFrom + SQR_SIZE) {
+                    for (rowIdx in 0 until NUM_OF_ROW) {
+                        retOffset[rowIdx][colIdx] = distance
                     }
-
-                    RotatePattern.PATTERN_13.ordinal
-                    -> {
-                        // 左側のエリアと右側のエリアを入れ替える
-                        // 左側エリアに６行右のエリアへの移動を設定
-                        for (maskIdx in 0 until SQR_SIZE) {
-                            for (rowIdx in 0 until NUM_OF_ROW) {
-                                retOffset[rowIdx][maskIdx] = 6
-                            }
-                        }
-                        // 右側エリアに６行右のエリアへの移動を設定
-                        // 右側エリアのスタート列
-                        val startColIdx = SQR_SIZE + SQR_SIZE
-                        for (maskIdx in startColIdx until startColIdx + SQR_SIZE) {
-                            for (rowIdx in 0 until NUM_OF_ROW) {
-                                retOffset[rowIdx][maskIdx] = -6
-                            }
-                        }
-
-                    }
-
-                    RotatePattern.PATTERN_23.ordinal
-                    -> {
-                        // 中側のエリアと右側のエリアを入れ替える
-                        // 中側エリアのスタート列
-                        val start2ColIdx = SQR_SIZE
-                        //中段エリアに右側のエリアへの移動を設定
-                        for (maskIdx in start2ColIdx until start2ColIdx + SQR_SIZE) {
-                            for (rowIdx in 0 until NUM_OF_ROW) {
-                                retOffset[rowIdx][maskIdx] = 3
-                            }
-                        }
-                        // 右側エリアのスタート列
-                        val start3ColIdx = SQR_SIZE + SQR_SIZE
-                        //中段エリアに右側のエリアへの移動を設定
-                        for (maskIdx in start3ColIdx until start3ColIdx + SQR_SIZE) {
-                            for (rowIdx in 0 until NUM_OF_ROW) {
-                                retOffset[rowIdx][maskIdx] = -3
-                            }
-                        }
+                }
+                for (colIdx in startIndexTo until startIndexTo + SQR_SIZE) {
+                    for (rowIdx in 0 until NUM_OF_ROW) {
+                        retOffset[rowIdx][colIdx] = -distance
                     }
                 }
             }

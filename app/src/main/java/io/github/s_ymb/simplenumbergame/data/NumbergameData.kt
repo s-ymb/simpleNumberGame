@@ -2,11 +2,9 @@ package io.github.s_ymb.simplenumbergame.data
 
 open class NumbergameData {
     companion object {
-        const val NUM_NOT_SET: Int = 0
-        const val IMPOSSIBLE_NUM: Int = -1
+        const val NUM_NOT_SET: Int = 0            //未設定セルは０で表現
         const val NUM_OF_COL: Int = 9             // 全体で９行
         const val NUM_OF_ROW: Int = 9             // 全体で９列
-//        const val NUM_OF_SQR: Int = 9             // 全体で９枠
         const val SQR_SIZE: Int = 3               //  平方領域は３×３マス
         const val KIND_OF_DATA: Int = 9           //  マスに入る数値は１～９（０は未設定扱い）
         const val MAX_NUM_CNT: Int = 9            //　各数字は全体で９個まで
@@ -84,15 +82,6 @@ open class NumbergameData {
             }
         }
 
-/*      //w
-        for (rowIdx in sqrStartRow until sqrStartRow + SQR_SIZE) {
-            for (coIIdx in sqrStartCol until sqrStartCol + SQR_SIZE) {
-                oneSqr[checkIdx] = checkGrid[rowIdx][coIIdx]
-                checkIdx++
-            }
-        }
-
- */
         // 重複チェック
         return dupCheck(oneSqr)
 
