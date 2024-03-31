@@ -33,6 +33,8 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -57,10 +59,12 @@ fun GameScreen(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+
         Box(
             modifier = Modifier
             .background(color=Color.Blue)
-       ) {
+
+            ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -167,6 +171,7 @@ fun NumberGridLayout(
                 if (cell.num != NumbergameData.NUM_NOT_SET) {
                     numStr = cell.num.toString()
                 }
+                val contentDesc = "${rowIdx}行${colIdx}列"
                 Text(
                     text = numStr,
                     color = textColor,
@@ -178,6 +183,7 @@ fun NumberGridLayout(
                         .width(39.dp)
                         .height(43.dp)
 //                        .wrapContentHeight(Alignment.CenterVertically)//.background(bgColor)
+                        .semantics{contentDescription = contentDesc}
                         .border(
                             border = BorderStroke(
                                 width = borderWidth.dp,
@@ -222,6 +228,7 @@ fun NumBtnLayout(
     currentBtn: Array<ScreenBtnData>,
     modifier: Modifier = Modifier,
 ) {
+    val numBtnDescPost = stringResource(R.string.desc_btn_num)
     Row(
         verticalAlignment = Alignment.Bottom,
         modifier = modifier,
@@ -236,10 +243,11 @@ fun NumBtnLayout(
                 btnEnabled = false
                 btnTextColor = Color.Black
             }
-
+            val numBtnDesc = btnNum.toString() + numBtnDescPost
             Button(
                 onClick = { onNumBtnClicked(btnNum) },
                 enabled = btnEnabled,
+                modifier = Modifier.semantics{contentDescription = numBtnDesc},
             ) {
                 Text(
                     text = btnNum.toString(),
@@ -273,9 +281,11 @@ fun NumBtnLayout(
                 btnEnabled = false
                 btnTextColor = Color.Black
             }
+            val numBtnDesc = btnNum.toString() + numBtnDescPost
             Button(
                 onClick = { onNumBtnClicked(btnNum) },
                 enabled = btnEnabled,
+                modifier = Modifier.semantics{contentDescription = numBtnDesc},
             ) {
                 Text(
                     text = btnNum.toString(),
@@ -291,8 +301,10 @@ fun NumBtnLayout(
             }
         }
         //削除ボタン
+        val delBtnDesc = stringResource(R.string.desc_btn_del)
         Button(
             onClick = { onNumBtnClicked(NumbergameData.NUM_NOT_SET) },
+            modifier = Modifier.semantics{contentDescription = delBtnDesc},
             contentPadding = PaddingValues(
                 start = 6.dp,
                 top = 4.dp,
@@ -308,13 +320,14 @@ fun NumBtnLayout(
 }
 
 /*
-       機能ボタン（新規・クリア）を表示
+       機能ボタン（新規・終了）を表示
  */
 @Composable
 fun FunBtnLayout(
     onNewGameBtnClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val newBtnDesc = stringResource(R.string.desc_btn_new)
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier,
@@ -324,6 +337,7 @@ fun FunBtnLayout(
         ) {
             //新規ボタン
             Button(
+                modifier = Modifier.semantics{contentDescription = newBtnDesc},
                 onClick = { onNewGameBtnClicked() },
                 contentPadding = PaddingValues(
                                     start = 24.dp,
@@ -337,8 +351,10 @@ fun FunBtnLayout(
                 )
             }
             //終了ボタン
+            val endBtnDesc = stringResource(R.string.desc_btn_end)
             val activity = (LocalContext.current as Activity)
             Button(
+                modifier = Modifier.semantics{contentDescription = endBtnDesc},
                 onClick = { activity.finish() },
                 contentPadding = PaddingValues(
                                     start = 24.dp,

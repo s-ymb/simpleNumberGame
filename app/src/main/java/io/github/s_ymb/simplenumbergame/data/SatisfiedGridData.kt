@@ -35,11 +35,6 @@ class SatisfiedGridData (satisfiedArray: Array<IntArray> = Array(NUM_OF_ROW){
     }
 
     fun getRandom() : Array<IntArray>  {
-        // 正解リストの１つの正解を選択
-        // NumbergemeViewModelに移動
-//        val satisfiedIdx: Int=  (0 until dataList.size).random()
-//        val satisfiedGrid = dataList[satisfiedIdx]
-
         // 入れ替えるパターンをランダムに選択
         val rotateType = (RotateType.entries.toTypedArray()).random().ordinal
         val rotateDirection = (RotateDirection.entries.toTypedArray()).random().ordinal

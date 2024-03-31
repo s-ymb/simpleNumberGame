@@ -60,6 +60,15 @@
     <string name="err_btn_fix_cell_selected">初期設定の場所は\n入力できません</string>
     <string name="err_btn_cell_not_selected">入力する場所を\nタップしてください</string>
 
+    <string name="desc_cell_area_pre">数字を入力場所する場所を</string>
+    <string name="desc_cell_area_row">行</string>
+    <string name="desc_cell_area_col">列</string>
+    <string name="desc_cell_area_post">に設定します</string>
+    <string name="desc_btn_num">を入力します</string>
+    <string name="desc_btn_del">数字を削除します</string>
+    <string name="desc_btn_new">課題を新規に作成します</string>
+    <string name="desc_btn_end">ゲームを終了します</string>
+
     NOT_SELECTED
 
     <string name="yes">はい</string>

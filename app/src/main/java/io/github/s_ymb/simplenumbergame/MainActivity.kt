@@ -15,10 +15,9 @@ import io.github.s_ymb.simplenumbergame.ui.theme.NumbergameTheme
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        this.installSplashScreen()
-        super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        super.onCreate(savedInstanceState)
+        this.installSplashScreen()
         setContent {
             NumbergameTheme {
                 // A surface container using the 'background' color from the theme
