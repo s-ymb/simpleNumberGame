@@ -7,10 +7,12 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
@@ -54,13 +56,24 @@ fun GameScreen(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        // グリッド表示
-        NumberGridLayout(
-            onCellClicked = { rowId, colId -> gameViewModel.onCellClicked(rowId, colId) },
-            currentData = gameUiState.currentData
+        Box(
+            modifier = Modifier
+            .background(color=Color.Blue)
+       ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                // グリッド表示
+                NumberGridLayout(
+                    onCellClicked = { rowId, colId -> gameViewModel.onCellClicked(rowId, colId) },
+                    currentData = gameUiState.currentData
+                )
+            }
+        }
+        Spacer(
+            modifier = Modifier
+                .size(8.dp)
         )
-
-
         // 数字ボタン表示
         NumBtnLayout(
             onNumBtnClicked = { num: Int -> gameViewModel.onNumberBtnClicked(num) },
@@ -69,7 +82,6 @@ fun GameScreen(
         Spacer(
             modifier = Modifier
                 .size(8.dp)
-            //.background(color=Color.Red)
         )
 
         // エラーメッセージ用のToast を表示
@@ -113,11 +125,11 @@ fun NumberGridLayout(
 ) {
     for ((rowIdx: Int, rowData: Array<ScreenCellData>) in currentData.withIndex()) {
         Row(
-            verticalAlignment = Alignment.Top,
+            verticalAlignment = Alignment.Bottom,
         ) {
             for ((colIdx: Int, cell: ScreenCellData) in rowData.withIndex()) {
                 var borderWidth: Int
-                borderWidth = 2
+                borderWidth = 1
                 var borderColor: Color = colorResource(R.color.cell_border_color_not_selected)
                 var textColor: Color= Color.Black
                 var fWeight: FontWeight = FontWeight.Light
@@ -150,11 +162,13 @@ fun NumberGridLayout(
                     text = numStr,
                     color = textColor,
                     textAlign = TextAlign.Center,
-                    fontSize = 24.sp,
+                    fontSize = 30.sp,
                     fontWeight = fWeight,
                     modifier = modifier
-                        .width(38.dp)
-                        .padding(0.dp)
+//                        .padding(0.dp,)
+                        .width(39.dp)
+                        .height(43.dp)
+//                        .wrapContentHeight(Alignment.CenterVertically)//.background(bgColor)
                         .border(
                             border = BorderStroke(
                                 width = borderWidth.dp,
@@ -175,7 +189,7 @@ fun NumberGridLayout(
                     //平方毎にスペースを開ける
                     Spacer(
                         modifier = modifier
-                            .size(4.dp)
+                            .size(3.dp)
                     )
                 }
             }
@@ -184,7 +198,7 @@ fun NumberGridLayout(
             //平方毎にスペースを開ける
             Spacer(
                 modifier = modifier
-                    .size(4.dp)
+                    .size(3.dp)
             )
         }
     }
@@ -207,26 +221,35 @@ fun NumBtnLayout(
         for (btnNum in 1..5) {
             // 選択中のセルの設定可否を初期設定
             var btnEnabled = true
+            var btnTextColor = Color.White
             // 数字が９個設定してある数字ボタンは使用不可
             if (currentBtn[btnNum].cnt == NumbergameData.MAX_NUM_CNT) {
                 btnEnabled = false
+                btnTextColor = Color.Black
             }
-
-            // ボタン押下エラー時の処理
 
             Button(
                 onClick = { onNumBtnClicked(btnNum) },
                 enabled = btnEnabled,
             ) {
-                Text(text = btnNum.toString())
+                Text(
+                    text = btnNum.toString(),
+                    fontSize = 20.sp,
+                    color = btnTextColor,
+                    )
                 Text(
                     text = currentBtn[btnNum].cnt.toString(),
-                    fontSize = 9.sp,
+                    fontSize = 12.sp,
                     textAlign = TextAlign.End,
+                    color = btnTextColor,
                 )
             }
         }
     }
+    Spacer(
+        modifier = Modifier
+            .size(4.dp)
+    )
     Row(
         verticalAlignment = Alignment.Bottom,
         modifier = modifier,
@@ -236,26 +259,41 @@ fun NumBtnLayout(
         for (btnNum in 6..9) {
             // 数字が９個設定してある数字ボタンは使用不可
             var btnEnabled = true
+            var btnTextColor = Color.White
             if (currentBtn[btnNum].cnt == NumbergameData.MAX_NUM_CNT) {
                 btnEnabled = false
+                btnTextColor = Color.Black
             }
             Button(
                 onClick = { onNumBtnClicked(btnNum) },
                 enabled = btnEnabled,
             ) {
-                Text(text = btnNum.toString())
+                Text(
+                    text = btnNum.toString(),
+                    fontSize = 20.sp,
+                    color = btnTextColor,
+                )
                 Text(
                     text = currentBtn[btnNum].cnt.toString(),
-                    fontSize = 9.sp,
+                    fontSize = 12.sp,
                     textAlign = TextAlign.End,
+                    color = btnTextColor,
                 )
             }
         }
         //削除ボタン
         Button(
             onClick = { onNumBtnClicked(NumbergameData.NUM_NOT_SET) },
+            contentPadding = PaddingValues(
+                start = 6.dp,
+                top = 4.dp,
+                end = 6.dp,
+                bottom = 4.dp,),
         ) {
-            Text(text = stringResource(R.string.btn_num_delete))
+            Text(
+                text = stringResource(R.string.btn_num_delete),
+                fontSize = 24.sp,
+            )
         }
     }
 }
@@ -277,16 +315,32 @@ fun FunBtnLayout(
         ) {
             //新規ボタン
             Button(
-                onClick = { onNewGameBtnClicked() }
+                onClick = { onNewGameBtnClicked() },
+                contentPadding = PaddingValues(
+                                    start = 24.dp,
+                                    top = 8.dp,
+                                    end = 24.dp,
+                                    bottom = 8.dp,),
             ) {
-                Text(text = stringResource(R.string.btn_new))
+                Text(
+                    text = stringResource(R.string.btn_new),
+                    fontSize = 24.sp,
+                )
             }
             //終了ボタン
             val activity = (LocalContext.current as Activity)
             Button(
-                onClick = { activity.finish() }
+                onClick = { activity.finish() },
+                contentPadding = PaddingValues(
+                                    start = 24.dp,
+                                    top = 8.dp,
+                                    end = 24.dp,
+                                    bottom = 8.dp,),
             ) {
-                Text(text = stringResource(R.string.btn_exit))
+                Text(
+                    text = stringResource(R.string.btn_exit),
+                    fontSize = 24.sp,
+                )
             }
         }
     }
@@ -318,7 +372,7 @@ private fun SliderLayout(
         val sliderTxt: String = stringResource(R.string.slider_title1) + sliderPosition.toInt().toString() + stringResource(R.string.slider_title2)
         Text(
             text = sliderTxt,
-            fontSize = 12.sp,
+            fontSize = 16.sp,
         )
     }
 
@@ -342,19 +396,30 @@ private fun FinalDialog(
             // button. If you want to disable that functionality, simply use an empty
             // onCloseRequest.
         },
-        title = { Text(text = stringResource(R.string.congratulations)) },
+        title = {
+                Text(
+                    text = stringResource(R.string.congratulations),
+                    fontSize = 24.sp,
+                )
+        },
         dismissButton = {
             TextButton(
                 onClick = {
                     activity.finish()
                 }
             ) {
-                Text(text = stringResource(R.string.btn_exit))
+                Text(
+                    text = stringResource(R.string.btn_exit),
+                    fontSize = 24.sp,
+                )
             }
         },
         confirmButton = {
             TextButton(onClick = onNewGameBtnClicked) {
-                Text(text = stringResource(R.string.btn_new))
+                Text(
+                    text = stringResource(R.string.btn_new),
+                    fontSize = 24.sp,
+                )
             }
         }
     )

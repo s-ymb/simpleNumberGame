@@ -46,8 +46,8 @@
     <string name="btn_save">一時保存</string>
     <string name="btn_save_challenge">課題保存</string>
 
-    <string name="slider_title1">新規時の空欄：</string>
-    <string name="slider_title2">個：上のスライドで増減</string>
+    <string name="slider_title1">新規時空欄：</string>
+    <string name="slider_title2">個：スライドで増減</string>
 
     <string name="search_result_title">選択中のセルの入力値毎の正解数は以下です。</string>
     <string name="search_result_num">入力値</string>

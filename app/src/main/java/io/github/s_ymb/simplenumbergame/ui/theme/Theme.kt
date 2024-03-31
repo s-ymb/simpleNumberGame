@@ -40,6 +40,8 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun NumbergameTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    // MainActivity 本来の Theme へ差し替える
+    //setTheme(R.style.AppTheme)
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
