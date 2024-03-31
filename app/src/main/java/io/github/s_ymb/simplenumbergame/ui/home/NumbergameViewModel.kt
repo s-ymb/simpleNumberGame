@@ -167,18 +167,18 @@ class NumbergameViewModel : ViewModel() {
        }
         // TODO トーストのメッセージは仮置き(view Model なので strings.xml からの取得方法要検討
         if(DupErr.NO_DUP != ret) {
-            val msg = when (ret) {
-                DupErr.ROW_DUP -> "同一行に同じ数字は入力出来ません"
-                DupErr.COL_DUP -> "同一列に同じ数字は入力出来ません"
-                DupErr.SQ_DUP -> "同一枠に同じ数字は入力出来ません"
-                DupErr.FIX_DUP -> "初期値は変更できません"
-                DupErr.NOT_SELECTED -> "数字を入力する場所をタップしてください"
-                else -> "???????"           //無いはず
-            }
+//            val msg = when (ret) {
+//                DupErr.ROW_DUP -> "同一行に同じ数字は\n入力出来ません"
+//                DupErr.COL_DUP -> "同一列に同じ数字は\n入力出来ません"
+//                DupErr.SQ_DUP -> "同一枠に同じ数字は\n入力出来ません"
+//                DupErr.FIX_DUP -> "初期値は変更できません"
+//                DupErr.NOT_SELECTED -> "数字を入力する場所を\nタップしてください"
+//                else -> "???????"           //無いはず
+//            }
 
             _toastUiState.value = ToastUiState(
                 showToast = true,
-                toastMsg = msg,
+                toastMsgId = ret.ordinal,
             )
         }
         //描画データ再作成

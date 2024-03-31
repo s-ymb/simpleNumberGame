@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.s_ymb.simplenumbergame.R
+import io.github.s_ymb.simplenumbergame.data.DupErr
 import io.github.s_ymb.simplenumbergame.data.NumbergameData
 import io.github.s_ymb.simplenumbergame.data.ScreenBtnData
 import io.github.s_ymb.simplenumbergame.data.ScreenCellData
@@ -84,10 +85,18 @@ fun GameScreen(
                 .size(8.dp)
         )
 
-        // エラーメッセージ用のToast を表示
+        // エラーメッセージ用のToast を表示(この画面では重複エラーのIDが設定される）
         if(toastUiState.showToast) {
+            val toastMsg = when (toastUiState.toastMsgId){
+                                    DupErr.ROW_DUP.ordinal -> stringResource(R.string.err_btn_row_dup)
+                                    DupErr.COL_DUP.ordinal -> stringResource(R.string.err_btn_col_dup)
+                                    DupErr.SQ_DUP.ordinal -> stringResource(R.string.err_btn_sq_dup)
+                                    DupErr.FIX_DUP.ordinal -> stringResource(R.string.err_btn_fix_cell_selected)
+                                    DupErr.NOT_SELECTED.ordinal -> stringResource(R.string.err_btn_cell_not_selected)
+                                    else -> "想定外のエラー"
+                                }
             val context = LocalContext.current
-            val toast = Toast.makeText(context, toastUiState.toastMsg, Toast.LENGTH_LONG)
+            val toast = Toast.makeText(context, toastMsg, Toast.LENGTH_LONG)
             // TODO 設定しても下端に出るので置いておく
             // toast.setGravity(Gravity.TOP, 0, 0);
             toast.show()
@@ -194,7 +203,7 @@ fun NumberGridLayout(
                 }
             }
         }
-        if (rowIdx % 3 == 2) {
+        if (rowIdx % 3 == 2 && rowIdx != 8) {
             //平方毎にスペースを開ける
             Spacer(
                 modifier = modifier
