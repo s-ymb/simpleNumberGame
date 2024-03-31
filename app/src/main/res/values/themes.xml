@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Numbergame" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="NumbergameTheme" parent="android:Theme.Material.Light.NoActionBar" />
 
-    <style name="SplashTheme" parent="Theme.SplashScreen.IconBackground">
+    <style name="SplashTheme" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/teal_200</item>
         <item name="windowSplashScreenIconBackgroundColor">@color/teal_200</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
         <item name="windowSplashScreenAnimationDuration">0</item>
     </style>
+
+    <style name="NumbergameStartTheme" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/teal_200</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/teal_200</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+        <item name="windowSplashScreenAnimationDuration">0</item>
+        <item name="postSplashScreenTheme">@style/NumbergameTheme</item>
+    </style>
+
+
+
 </resources>

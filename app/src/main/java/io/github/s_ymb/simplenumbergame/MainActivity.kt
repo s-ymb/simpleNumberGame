@@ -19,7 +19,6 @@ class MainActivity : ComponentActivity() {
         this.installSplashScreen()
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
         setContent {
             NumbergameTheme {
                 // A surface container using the 'background' color from the theme
