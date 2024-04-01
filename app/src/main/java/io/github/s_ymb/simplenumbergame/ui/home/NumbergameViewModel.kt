@@ -21,15 +21,13 @@ class NumbergameViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(NumbergameUiState())
     val uiState: StateFlow<NumbergameUiState> = _uiState.asStateFlow()
 
-    // Toast UI state
+    // Toast UI state（toast用)
     private val _toastUiState = MutableStateFlow(ToastUiState())
     val toastUiState = _toastUiState.asStateFlow()
 
     private val gridData = GridData()
-//    private var satisfiedGridData = SatisfiedGridData()                 //表示中の正解リスト
-//    private val satisfiedGridList = SatisfiedGridList()         //正解リスト
 
-    // TODO 固定セルの初期値と設定できる範囲の検討が必要
+    // TODO 固定セル数の初期値と設定できる範囲の検討が必要
     private var blankCellCnt = 30                                   //空白のセルの個数
     private var selectedRow = IMPOSSIBLE_IDX                        //選択中セルの行番号
     private var selectedCol = IMPOSSIBLE_IDX                        //選択中セルの列番号
@@ -71,9 +69,9 @@ class NumbergameViewModel : ViewModel() {
             selectedNum = gridData.data[selectedRow][selectedCol].num
         }
 
-        // セルに
-        //      ・番号（初期値で編集不可かも）を設定
-        //      ・ボタンに表示する表示済みの数字毎の数を集計
+        //
+        //      ・セルを表示する情報を設定(番号、初期値、選択中、同じ番号が選択中等
+        //      ・ボタンに表示する表示済みの数字毎の数を集計して設定
         //      ・未設定のセルの数を集計（ゲーム終了判定用）
         for(rowIdx in 0 until NumbergameData.NUM_OF_ROW){
             for(colIdx in 0 until NumbergameData.NUM_OF_COL){
@@ -160,22 +158,13 @@ class NumbergameViewModel : ViewModel() {
         番号のボタンが押された場合、選択中のセルに番号を設定する
      */
     fun onNumberBtnClicked(number: Int){
-        var ret = DupErr.NOT_SELECTED       //とりあえず未選択状態
+        var ret = DupErr.NOT_SELECTED       //とりあえず未選択エラー状態
         if((selectedRow != IMPOSSIBLE_IDX) && (selectedCol != IMPOSSIBLE_IDX)) {
             // 画面で数字を入力する場所が選択されていた場合、データを設定
             ret = gridData.setData(selectedRow, selectedCol, number, false)
        }
-        // TODO トーストのメッセージは仮置き(view Model なので strings.xml からの取得方法要検討
+        // 数値が未選択 or 重複（数独のルールを逸脱）した場合toast で表示
         if(DupErr.NO_DUP != ret) {
-//            val msg = when (ret) {
-//                DupErr.ROW_DUP -> "同一行に同じ数字は\n入力出来ません"
-//                DupErr.COL_DUP -> "同一列に同じ数字は\n入力出来ません"
-//                DupErr.SQ_DUP -> "同一枠に同じ数字は\n入力出来ません"
-//                DupErr.FIX_DUP -> "初期値は変更できません"
-//                DupErr.NOT_SELECTED -> "数字を入力する場所を\nタップしてください"
-//                else -> "???????"           //無いはず
-//            }
-
             _toastUiState.value = ToastUiState(
                 showToast = true,
                 toastMsgId = ret.ordinal,
