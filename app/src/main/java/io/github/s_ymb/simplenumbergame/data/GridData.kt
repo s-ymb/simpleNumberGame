@@ -21,7 +21,6 @@ class GridData(
         }
 
         // いままでに設定されている値を単なる数値の２次元配列にコピー
-        // 基底クラス(NumbergameData は
         val tmp: Array<Array<Int>> = Array(NUM_OF_ROW) { Array(NUM_OF_COL) { 0 } }
         for ((rowIdx, colArray) in data.withIndex()) {
             for ((colIdx, cell) in colArray.withIndex()) {
@@ -68,7 +67,7 @@ class GridData(
 
     /*
         全てのデータを初期化
-            引数：withFixCell  true：全てのデータ、false:課題で設定されたデータ以外
+            引数：withFixCell  true：全てのデータ、false:新規ゲームで設定されたデータ以外
     */
     fun clearAll (withFixCell: Boolean) {
         for ((rowIdx, colArray) in data.withIndex()) {

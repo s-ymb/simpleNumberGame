@@ -1,14 +1,15 @@
 package io.github.s_ymb.simplenumbergame.data
 
+/*
+    コンストラクタで渡された数独の正解配列をランダムに 行・列 入替するクラス
+*/
 class SatisfiedGridData (satisfiedArray: Array<IntArray> = Array(NUM_OF_ROW){
                                     IntArray(NUM_OF_COL){
                                                                             NUM_NOT_SET
                                                                         }
                                                             }): NumbergameData(){
     private val satisfied = satisfiedArray
-    /*
-    正解データを正解リストからランダムに選択し、セルの位置の再配置を指定する
-*/
+
     /*
         データ入替の種類
      */
@@ -33,6 +34,11 @@ class SatisfiedGridData (satisfiedArray: Array<IntArray> = Array(NUM_OF_ROW){
         MIDDLE,     // 真ん中のエリア
         END         // 行入替の場合、最下段のエリア、列入替の場合、右端のエリア
     }
+
+    /*
+            行・列入替のパターンをランダムに選択し、コンストラクタで受け取った数列を
+            行 or 列 入替した数列を戻す
+    */
 
     fun getRandom() : Array<IntArray>  {
         // 入れ替えるパターンをランダムに選択

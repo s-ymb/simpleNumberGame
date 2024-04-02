@@ -127,7 +127,7 @@ class NumbergameViewModel : ViewModel() {
      */
     fun newGame(){
         //正解リストより初期値を設定する
-        // 初期課題をランダムに選択
+        // 正解配列をランダムに選択
         val satisfiedIdx: Int= (0 until SatisfiedGridArrayInit.data.size).random()
 
         // 正解配列をランダムに並べ変える、９×９のセルに初期値設定する
