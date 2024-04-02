@@ -27,7 +27,6 @@ class NumbergameViewModel : ViewModel() {
 
     private val gridData = GridData()
 
-    // TODO 固定セル数の初期値と設定できる範囲の検討が必要
     private var blankCellCnt = 30                                   //空白のセルの個数
     private var selectedRow = IMPOSSIBLE_IDX                        //選択中セルの行番号
     private var selectedCol = IMPOSSIBLE_IDX                        //選択中セルの列番号
