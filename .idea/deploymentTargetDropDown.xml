@@ -3,9 +3,6 @@
   <component name="deploymentTargetDropDown">
     <value>
       <entry key="app">
-<<<<<<<<< Temporary merge branch 1
-        <State />
-=========
         <State>
           <targetSelectedWithDropDown>
             <Target>
@@ -20,7 +17,6 @@
           </targetSelectedWithDropDown>
           <timeTargetWasSelectedWithDropDown value="2024-03-31T13:02:30.172993600Z" />
         </State>
->>>>>>>>> Temporary merge branch 2
       </entry>
     </value>
   </component>
